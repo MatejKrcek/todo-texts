@@ -1,4 +1,4 @@
-package com.matejkrcek.notes
+package com.matejkrcek.fnotes
 
 import io.flutter.embedding.android.FlutterActivity
 

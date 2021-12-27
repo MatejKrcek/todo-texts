@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.matejkrcek.notes">
+    package="com.matejkrcek.fnotes">
    <application
         android:label="Flutter Notes"
         android:icon="@mipmap/launcher_icon">

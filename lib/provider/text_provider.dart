@@ -15,21 +15,30 @@ class TextProvider with ChangeNotifier {
 
   var _uuid = const Uuid();
 
-  Future<void> removeEleFromList(int index) async {
+  Future<void> removeEleFromList(int index, String id) async {
     final dbHelper = DatabaseHelper.instance;
 
     _archivedTexts.add(listOfTexts[index]);
     _listOfTexts.removeAt(index);
 
+    // ignore: unused_local_variable
     final rowsDeleted = await dbHelper.delete(id);
-    print('deleted $rowsDeleted row(s): row $id');
-
     notifyListeners();
+    return;
   }
 
-  void undoRemoveEle(int index) {
+  Future<void> undoRemoveEle(int index) async {
     _listOfTexts.insert(index, _archivedTexts[index]);
+    final dbHelper = DatabaseHelper.instance;
+    Map<String, dynamic> _row = {
+      DatabaseHelper.columnId: _archivedTexts[index].id,
+      DatabaseHelper.columnText: _archivedTexts[index].text,
+      DatabaseHelper.columnDate: _archivedTexts[index].date,
+    };
+    // ignore: unused_local_variable
+    final _idRow = await dbHelper.insert(_row);
     notifyListeners();
+    return;
   }
 
   Future<void> loadEles() async {

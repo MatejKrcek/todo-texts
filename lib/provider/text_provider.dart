@@ -18,25 +18,49 @@ class TextProvider with ChangeNotifier {
   Future<void> removeEleFromList(int index, String id) async {
     final dbHelper = DatabaseHelper.instance;
 
-    _archivedTexts.add(listOfTexts[index]);
+    _archivedTexts.insert(0, listOfTexts[index]);
     _listOfTexts.removeAt(index);
 
-    // ignore: unused_local_variable
-    final rowsDeleted = await dbHelper.delete(id);
+    await dbHelper.delete(id);
     notifyListeners();
     return;
   }
 
+  Future<void> changeEleOrder(int oldIndex, int newIndex, String id) async {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final TextModel _item = _listOfTexts[oldIndex];
+    _listOfTexts.removeAt(oldIndex);
+    _listOfTexts.insert(newIndex, _item);
+
+    notifyListeners();
+
+    final dbHelper = DatabaseHelper.instance;
+
+    for (var i = 0; i < _listOfTexts.length; i++) {
+      await dbHelper.delete(_listOfTexts[i].id);
+    }
+    for (var i = 0; i < _listOfTexts.length; i++) {
+      Map<String, dynamic> _row = {
+        DatabaseHelper.columnId: _listOfTexts[i].id,
+        DatabaseHelper.columnText: _listOfTexts[i].text,
+        DatabaseHelper.columnDate: _listOfTexts[i].date,
+      };
+      await dbHelper.insert(_row);
+    }
+    return;
+  }
+
   Future<void> undoRemoveEle(int index) async {
-    _listOfTexts.insert(index, _archivedTexts[index]);
+    _listOfTexts.insert(index, _archivedTexts[0]);
     final dbHelper = DatabaseHelper.instance;
     Map<String, dynamic> _row = {
-      DatabaseHelper.columnId: _archivedTexts[index].id,
-      DatabaseHelper.columnText: _archivedTexts[index].text,
-      DatabaseHelper.columnDate: _archivedTexts[index].date,
+      DatabaseHelper.columnId: _archivedTexts[0].id,
+      DatabaseHelper.columnText: _archivedTexts[0].text,
+      DatabaseHelper.columnDate: _archivedTexts[0].date,
     };
-    // ignore: unused_local_variable
-    final _idRow = await dbHelper.insert(_row);
+    await dbHelper.insert(_row);
     notifyListeners();
     return;
   }
@@ -44,7 +68,6 @@ class TextProvider with ChangeNotifier {
   Future<void> loadEles() async {
     final dbHelper = DatabaseHelper.instance;
     final allRows = await dbHelper.queryAllRows();
-
     for (var i = 0; i < allRows.length; i++) {
       List<TextModel> _data = [
         TextModel(
@@ -53,7 +76,7 @@ class TextProvider with ChangeNotifier {
           text: allRows[i]['text'],
         ),
       ];
-      _listOfTexts.insert(0, _data[0]);
+      _listOfTexts.add(_data[0]);
     }
     notifyListeners();
     return;

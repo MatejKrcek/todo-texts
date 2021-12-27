@@ -69,4 +69,11 @@ class DatabaseHelper {
     Database? db = await instance.database;
     return await db!.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
+
+  // Future<void> wipeRows() async {
+  //   Database? db = await instance.database;
+  //   db!.close();
+  //   _database = null;
+  //   return;
+  // }
 }

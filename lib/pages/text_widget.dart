@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/provider/text_provider.dart';
-import 'package:todo/util/text_model.dart';
-
+import 'package:flutter/services.dart';
 class TextWidget extends StatefulWidget {
   const TextWidget({
     Key? key,
@@ -33,7 +32,8 @@ class _TextWidgetState extends State<TextWidget> {
         : SliverReorderableList(
             key: UniqueKey(),
             itemCount: listOfTexts.length,
-            onReorder: (int oldIndex, int newIndex) {
+            onReorder: (int oldIndex, int newIndex) async {
+              HapticFeedback.mediumImpact();
               provider.changeEleOrder(
                   oldIndex, newIndex, listOfTexts[oldIndex].id);
             },
@@ -41,6 +41,7 @@ class _TextWidgetState extends State<TextWidget> {
               return Dismissible(
                 key: Key('${listOfTexts[index].id}'),
                 onDismissed: (direction) {
+                  HapticFeedback.mediumImpact();
                   provider.removeEleFromList(index, listOfTexts[index].id);
                   final snackBar = SnackBar(
                     content: const Text('The text was archived'),

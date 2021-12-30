@@ -24,24 +24,21 @@ class MainPage extends StatelessWidget {
         } else {
           return Scaffold(
             body: const SafeArea(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      floating: false,
-                      pinned: true,
-                      expandedHeight: 70,
-                      elevation: 0,
-                      backgroundColor: Color(0xFF212332),
-                      flexibleSpace: FlexibleSpaceBar(
-                        title: Text("All Notes"),
-                        centerTitle: true,
-                      ),
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    floating: false,
+                    pinned: true,
+                    expandedHeight: 70,
+                    elevation: 0,
+                    backgroundColor: Color(0xFF212332),
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Text("Life Notes"),
+                      centerTitle: true,
                     ),
-                    TextWidget(),
-                  ],
-                ),
+                  ),
+                  TextWidget(),
+                ],
               ),
             ),
             floatingActionButton: FloatingActionButton(

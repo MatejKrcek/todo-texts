@@ -28,6 +28,7 @@ class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TextProvider>(context);
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -36,35 +37,33 @@ class _InputPageState extends State<InputPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: ListView(
           children: [
-            const SizedBox(
-              height: 30,
+            SizedBox(
+              height: size.height * 0.05,
             ),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: SizedBox(
-                      width: 300,
-                      child: TextFormField(
-                        controller: _controller,
-                        autofocus: true,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Form(
+                  key: _formKey,
+                  child: SizedBox(
+                    width: size.width * 0.9,
+                    child: TextFormField(
+                      controller: _controller,
+                      autofocus: true,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 30,
@@ -72,21 +71,24 @@ class _InputPageState extends State<InputPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      provider.addEle(_controller.text);
-                      Navigator.pop(context);
-                      _controller.clear();
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Error'),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Submit'),
+                SizedBox(
+                  width: size.width * 0.5,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        provider.addEle(_controller.text);
+                        Navigator.pop(context);
+                        _controller.clear();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Error'),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
                 ),
               ],
             ),

@@ -45,7 +45,11 @@ class MainPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const InputPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const InputPage(
+                      type: 'create',
+                    ),
+                  ),
                 );
               },
               backgroundColor: Theme.of(context).colorScheme.primary,

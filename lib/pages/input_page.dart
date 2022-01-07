@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/provider/text_provider.dart';
+import 'package:todo/util/text_model.dart';
 
 class InputPage extends StatefulWidget {
-  const InputPage({Key? key}) : super(key: key);
+  const InputPage({
+    Key? key,
+    required this.type,
+    this.element,
+  }) : super(key: key);
+
+  final String type;
+  final TextModel? element;
 
   @override
   _InputPageState createState() => _InputPageState();
@@ -16,7 +24,11 @@ class _InputPageState extends State<InputPage> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    if (widget.element?.text != null && widget.type == 'edit') {
+      _controller = TextEditingController(text: widget.element!.text);
+    } else {
+      _controller = TextEditingController();
+    }
   }
 
   @override
@@ -34,6 +46,7 @@ class _InputPageState extends State<InputPage> {
         elevation: 0,
         title: const Text('Add a New Text'),
         backgroundColor: const Color(0xFF212332),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -50,6 +63,7 @@ class _InputPageState extends State<InputPage> {
                   child: SizedBox(
                     width: size.width * 0.9,
                     child: TextFormField(
+                      // initialValue: _controller.text,
                       controller: _controller,
                       autofocus: true,
                       keyboardType: TextInputType.multiline,
@@ -87,7 +101,7 @@ class _InputPageState extends State<InputPage> {
                         );
                       }
                     },
-                    child: const Text('Submit'),
+                    child: Text(widget.type == 'edit' ? 'Save edit' : 'Save'),
                   ),
                 ),
               ],

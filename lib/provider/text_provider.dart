@@ -9,11 +9,10 @@ import 'package:todo/util/text_model.dart';
 class TextProvider with ChangeNotifier {
   List<TextModel> _listOfTexts = [];
   List<TextModel> _archivedTexts = [];
+  var _uuid = const Uuid();
 
   List get listOfTexts => [..._listOfTexts];
   List get archivedTexts => [..._archivedTexts];
-
-  var _uuid = const Uuid();
 
   Future<void> removeEleFromList(int index, String id) async {
     final dbHelper = DatabaseHelper.instance;
@@ -23,6 +22,26 @@ class TextProvider with ChangeNotifier {
 
     await dbHelper.delete(id);
     notifyListeners();
+    return;
+  }
+
+  Future<void> editEle(String id, String text) async {
+    final dbHelper = DatabaseHelper.instance;
+
+    //! todo: edit the element in the aray _listOfTexts
+
+    // _listOfTexts[_listOfTexts.indexWhere((element) => element.id == id)].id = 'j';
+
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnId: 'id',
+      DatabaseHelper.columnText: 'text',
+      DatabaseHelper.columnDate: DateTime.now().toString(),
+    };
+
+    await dbHelper.update(row);
+    print('CALLL');
+    // loadEles();
+    // notifyListeners();
     return;
   }
 
